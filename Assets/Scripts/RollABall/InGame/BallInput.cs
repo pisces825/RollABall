@@ -5,50 +5,33 @@ using UnityEngine.InputSystem;
 
 public class BallInput : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    private Rigidbody ballRigidBody;
+    private void Start()
     {
-        
+        ballRigidBody = Ball.GetComponent<Rigidbody>();
     }
+
+    public GameObject Ball;
 
     // Update is called once per frame
     void Update()
     {
-        // 新しいInput Systemを使用して"W"キーの入力を検知
-        if (Keyboard.current.wKey.wasPressedThisFrame)
-        {
-            Debug.Log("Wキーが押されました!");
-        }
-        // Wキーが押され続けている間
         if (Keyboard.current.wKey.isPressed)
         {
-            Debug.Log("Wキーが押され続けてます!");
+            ballRigidBody.AddForce(Vector3.forward);
         }
-
-        // 演習①
-        // Aキーが押され続けている間
-        if (Keyboard.current.wKey.isPressed)
+        if (Keyboard.current.aKey.isPressed)
         {
-            Debug.Log("Aキーが押され続けてます!");
+            ballRigidBody.AddForce(Vector3.left);
         }
-        // Sキーが押され続けている間
-        if (Keyboard.current.wKey.isPressed)
+        if (Keyboard.current.sKey.isPressed)
         {
-            Debug.Log("Sキーが押され続けてます!");
+            ballRigidBody.AddForce(Vector3.back);
         }
-        // Dキーが押され続けている間
-        if (Keyboard.current.wKey.isPressed)
+        if (Keyboard.current.dKey.isPressed)
         {
-            Debug.Log("Dキーが押され続けてます!");
+            ballRigidBody.AddForce(Vector3.right);
         }
-
-        // Wキーが離された瞬間だけ評価する
-        if (Keyboard.current.wKey.wasReleasedThisFrame)
-        {
-            Debug.Log("Wキーが離されました!");
-        }
-
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Debug.Log($"マウスの座標: {mousePosition}");
     }
 }
