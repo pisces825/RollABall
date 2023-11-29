@@ -23,7 +23,7 @@ public class InGameTimer : MonoBehaviour
         }
         else
         {
-            TimerText.text = $"{timerTime -= Time.deltaTime}";
+            TimerText.text = $"{StringUtility.SecondsToTwoDecimalPlaces(timerTime -= Time.deltaTime)}";
         }
     }
 }
