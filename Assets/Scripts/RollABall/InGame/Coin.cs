@@ -4,39 +4,63 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+
+    private float bigBonusTime = 1f;
+
     private float bonusTime = 2f;
     private float disappearTime = 5f;
 
-    private int scorevalue = 10; //通常のスコア値
+    private int scoreValue = 10; //通常のスコア値
     private int bonusScoreValue = 20; //ボーナススコア値
-    private bool isBonus = true;
+    private int bigBonusScoreValue = 100;
+
+    private enum bonusChance
+    {
+        Invalide = -1,
+        BigBonus,
+        SmallBonus,
+        Nobonus,
+        NoBonus
+    }
+
+    private bonusChance bonusChances;
+
+    public Material CoinMaterial;
 
     void Start()
     {
         StartCoroutine(BonusTimeCoroutine());
     }
+
     IEnumerator BonusTimeCoroutine()
     {
-        // ここまではボーナスタイムの2秒待つ
-        yield return new WaitForSeconds(bonusTime);
-        isBonus = false;
-        // 消える時間は5秒なので、ボーナスタイムを2秒消費した3秒待つ
+        bonusChances = bonusChance.BigBonus;
+        CoinMaterial.color = Color.yellow;
+        yield return new WaitForSeconds(bigBonusTime);
+        bonusChances = bonusChance.SmallBonus;
+        CoinMaterial.color = Color.cyan;
+        yield return new WaitForSeconds(bonusTime - bigBonusTime);
+        bonusChances = bonusChance.Nobonus;
+        CoinMaterial.color = Color.red;
         yield return new WaitForSeconds(disappearTime - bonusTime);
         Destroy(this.gameObject);
     }
 
-    //
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "Sphere")
         {
-            if (isBonus)
+            switch (bonusChances)
             {
-                ScoreManager.ScoreCount += bonusScoreValue;
-            }
-            else
-            {
-                ScoreManager.ScoreCount += scorevalue;
+                case bonusChance.BigBonus:
+                    ScoreManager.ScoreCount += bigBonusScoreValue;
+                    break;
+                case bonusChance.SmallBonus:
+                    ScoreManager.ScoreCount += bonusScoreValue;
+                    break;
+                case bonusChance.NoBonus:
+                    ScoreManager.ScoreCount += scoreValue;
+                    break;
             }
             // コインを消去
             Destroy(gameObject);
